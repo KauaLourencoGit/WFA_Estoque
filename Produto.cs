@@ -16,11 +16,11 @@ namespace WFA_Estoque
 
         public Produto(string codigo, string descricao, string fornecedor, float preco, int quantidade)
         {
-            this.codigo = codigo;
-            this.descricao = descricao;
-            this.fornecedor = fornecedor;
-            this.preco = preco;
-            this.quantidade = quantidade;
+            Codigo = codigo;
+            Descricao = descricao;
+            Fornecedor = fornecedor;
+            Preco = preco;
+            Quantidade = quantidade;
         }
 
         public string Codigo { get => codigo; set => codigo = value; }

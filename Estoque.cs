@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WFA_Estoque
 {
-    internal class Estoque
+    internal class Estoque 
     {
         private List<Produto> itens = new List<Produto>();
 
@@ -31,12 +31,60 @@ namespace WFA_Estoque
         {
             ValidarProduto(p);
 
-            //if (BuscarProdutoPorCodigo(p.Codigo) != null)
-                //throw new InvalidOperationException($"Já existe um produto com o código '{p.Codigo}'.");
+            if (BuscarProdutoPorCodigo(p.Codigo) != null)
+                throw new InvalidOperationException($"Já existe um produto com o código '{p.Codigo}'.");
 
             Itens.Add(p);
 
         }
+
+        public void AtualizarProduto(Produto p)
+        {
+            ValidarProduto(p);
+
+            var existente = BuscarProdutoPorCodigo(p.Codigo);
+            if (existente == null)
+                throw new KeyNotFoundException($"Produto com o codigo '{p.Codigo}' não encontrado");
+
+            existente.Descricao = p.Descricao;
+            existente.Fornecedor = p.Fornecedor;
+            existente.Preco = p.Preco;
+            existente.Quantidade = p.Quantidade;
+        }
+
+        public void RemoverProdutoPorCodigo(string codigo)
+        {
+            var existente = BuscarProdutoPorCodigo(codigo);
+            if (existente == null)
+                throw new KeyNotFoundException($"Produto com o código '{codigo}' não existe");
+
+            
+            Itens.Remove(existente);
+        }
+
+        public Produto BuscarProdutoPorCodigo(string codigo)
+        {
+            for (int i = 0; i < Itens.Count; i++)
+                if (string.Equals(Itens[i].Codigo, codigo, StringComparison.OrdinalIgnoreCase))
+                    return Itens[i];
+            return null;
+        }
+
+        public List<Produto> BuscarProdutoPorDescricao(string descricao)
+        {
+            if (string.IsNullOrWhiteSpace(descricao))
+                return new List<Produto>(Itens);
+
+            var resultado = new List<Produto>();
+            string t = descricao.Trim();
+            for (int i = 0; i < Itens.Count; i++)
+            {
+                if (Itens[i].Descricao.IndexOf(t, StringComparison.OrdinalIgnoreCase) >= 0)
+                    resultado.Add(Itens[i]);
+            }
+            return resultado;
+        }
+
 
         
     }

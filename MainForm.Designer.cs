@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.pnlEstoque = new System.Windows.Forms.Panel();
+            this.tbxBuscar = new System.Windows.Forms.TextBox();
+            this.lvwEstoque = new System.Windows.Forms.ListView();
             this.lblBuscar = new System.Windows.Forms.Label();
             this.lblEstoque = new System.Windows.Forms.Label();
             this.pnlCadastro = new System.Windows.Forms.Panel();
@@ -43,8 +45,10 @@
             this.lblDescricao = new System.Windows.Forms.Label();
             this.lblCodigo = new System.Windows.Forms.Label();
             this.lblCadastro = new System.Windows.Forms.Label();
-            this.listView1 = new System.Windows.Forms.ListView();
-            this.tbxBuscar = new System.Windows.Forms.TextBox();
+            this.btnSalvar = new System.Windows.Forms.Button();
+            this.btnRemover = new System.Windows.Forms.Button();
+            this.btnEditar = new System.Windows.Forms.Button();
+            this.btnNovo = new System.Windows.Forms.Button();
             this.pnlEstoque.SuspendLayout();
             this.pnlCadastro.SuspendLayout();
             this.SuspendLayout();
@@ -52,14 +56,34 @@
             // pnlEstoque
             // 
             this.pnlEstoque.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.pnlEstoque.Controls.Add(this.btnNovo);
+            this.pnlEstoque.Controls.Add(this.btnEditar);
+            this.pnlEstoque.Controls.Add(this.btnRemover);
             this.pnlEstoque.Controls.Add(this.tbxBuscar);
-            this.pnlEstoque.Controls.Add(this.listView1);
+            this.pnlEstoque.Controls.Add(this.lvwEstoque);
             this.pnlEstoque.Controls.Add(this.lblBuscar);
             this.pnlEstoque.Controls.Add(this.lblEstoque);
             this.pnlEstoque.Location = new System.Drawing.Point(12, 12);
             this.pnlEstoque.Name = "pnlEstoque";
             this.pnlEstoque.Size = new System.Drawing.Size(468, 440);
             this.pnlEstoque.TabIndex = 0;
+            // 
+            // tbxBuscar
+            // 
+            this.tbxBuscar.Location = new System.Drawing.Point(134, 104);
+            this.tbxBuscar.Name = "tbxBuscar";
+            this.tbxBuscar.Size = new System.Drawing.Size(324, 20);
+            this.tbxBuscar.TabIndex = 1;
+            this.tbxBuscar.TextChanged += new System.EventHandler(this.tbxBuscar_TextChanged);
+            // 
+            // lvwEstoque
+            // 
+            this.lvwEstoque.HideSelection = false;
+            this.lvwEstoque.Location = new System.Drawing.Point(10, 127);
+            this.lvwEstoque.Name = "lvwEstoque";
+            this.lvwEstoque.Size = new System.Drawing.Size(448, 273);
+            this.lvwEstoque.TabIndex = 1;
+            this.lvwEstoque.UseCompatibleStateImageBehavior = false;
             // 
             // lblBuscar
             // 
@@ -84,6 +108,7 @@
             // pnlCadastro
             // 
             this.pnlCadastro.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.pnlCadastro.Controls.Add(this.btnSalvar);
             this.pnlCadastro.Controls.Add(this.tbxQuantidade);
             this.pnlCadastro.Controls.Add(this.tbxPreco);
             this.pnlCadastro.Controls.Add(this.tbxFornecedor);
@@ -195,21 +220,44 @@
             this.lblCadastro.TabIndex = 0;
             this.lblCadastro.Text = "Cadastro";
             // 
-            // listView1
+            // btnSalvar
             // 
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(10, 127);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(448, 289);
-            this.listView1.TabIndex = 1;
-            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.btnSalvar.Location = new System.Drawing.Point(132, 406);
+            this.btnSalvar.Name = "btnSalvar";
+            this.btnSalvar.Size = new System.Drawing.Size(85, 24);
+            this.btnSalvar.TabIndex = 2;
+            this.btnSalvar.Text = "Salvar";
+            this.btnSalvar.UseVisualStyleBackColor = true;
             // 
-            // tbxBuscar
+            // btnRemover
             // 
-            this.tbxBuscar.Location = new System.Drawing.Point(134, 104);
-            this.tbxBuscar.Name = "tbxBuscar";
-            this.tbxBuscar.Size = new System.Drawing.Size(324, 20);
-            this.tbxBuscar.TabIndex = 1;
+            this.btnRemover.Location = new System.Drawing.Point(338, 406);
+            this.btnRemover.Name = "btnRemover";
+            this.btnRemover.Size = new System.Drawing.Size(120, 24);
+            this.btnRemover.TabIndex = 2;
+            this.btnRemover.Text = "Remover Selecionado";
+            this.btnRemover.UseVisualStyleBackColor = true;
+            this.btnRemover.Click += new System.EventHandler(this.btnRemover_Click);
+            // 
+            // btnEditar
+            // 
+            this.btnEditar.Location = new System.Drawing.Point(165, 406);
+            this.btnEditar.Name = "btnEditar";
+            this.btnEditar.Size = new System.Drawing.Size(109, 24);
+            this.btnEditar.TabIndex = 2;
+            this.btnEditar.Text = "Editar Selecionado";
+            this.btnEditar.UseVisualStyleBackColor = true;
+            this.btnEditar.Click += new System.EventHandler(this.btnEditar_Click);
+            // 
+            // btnNovo
+            // 
+            this.btnNovo.Location = new System.Drawing.Point(9, 406);
+            this.btnNovo.Name = "btnNovo";
+            this.btnNovo.Size = new System.Drawing.Size(85, 24);
+            this.btnNovo.TabIndex = 2;
+            this.btnNovo.Text = "Novo";
+            this.btnNovo.UseVisualStyleBackColor = true;
+            this.btnNovo.Click += new System.EventHandler(this.btnNovo_Click);
             // 
             // MainForm
             // 
@@ -246,8 +294,12 @@
         private System.Windows.Forms.TextBox tbxFornecedor;
         private System.Windows.Forms.TextBox tbxDescricao;
         private System.Windows.Forms.TextBox tbxCodigo;
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView lvwEstoque;
         private System.Windows.Forms.TextBox tbxBuscar;
+        private System.Windows.Forms.Button btnSalvar;
+        private System.Windows.Forms.Button btnNovo;
+        private System.Windows.Forms.Button btnEditar;
+        private System.Windows.Forms.Button btnRemover;
     }
 }
 
