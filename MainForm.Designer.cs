@@ -29,11 +29,15 @@
         private void InitializeComponent()
         {
             this.pnlEstoque = new System.Windows.Forms.Panel();
+            this.btnNovo = new System.Windows.Forms.Button();
+            this.btnEditar = new System.Windows.Forms.Button();
+            this.btnRemover = new System.Windows.Forms.Button();
             this.tbxBuscar = new System.Windows.Forms.TextBox();
             this.lvwEstoque = new System.Windows.Forms.ListView();
             this.lblBuscar = new System.Windows.Forms.Label();
             this.lblEstoque = new System.Windows.Forms.Label();
             this.pnlCadastro = new System.Windows.Forms.Panel();
+            this.btnSalvar = new System.Windows.Forms.Button();
             this.tbxQuantidade = new System.Windows.Forms.TextBox();
             this.tbxPreco = new System.Windows.Forms.TextBox();
             this.tbxFornecedor = new System.Windows.Forms.TextBox();
@@ -45,10 +49,6 @@
             this.lblDescricao = new System.Windows.Forms.Label();
             this.lblCodigo = new System.Windows.Forms.Label();
             this.lblCadastro = new System.Windows.Forms.Label();
-            this.btnSalvar = new System.Windows.Forms.Button();
-            this.btnRemover = new System.Windows.Forms.Button();
-            this.btnEditar = new System.Windows.Forms.Button();
-            this.btnNovo = new System.Windows.Forms.Button();
             this.pnlEstoque.SuspendLayout();
             this.pnlCadastro.SuspendLayout();
             this.SuspendLayout();
@@ -67,6 +67,36 @@
             this.pnlEstoque.Name = "pnlEstoque";
             this.pnlEstoque.Size = new System.Drawing.Size(468, 440);
             this.pnlEstoque.TabIndex = 0;
+            // 
+            // btnNovo
+            // 
+            this.btnNovo.Location = new System.Drawing.Point(9, 406);
+            this.btnNovo.Name = "btnNovo";
+            this.btnNovo.Size = new System.Drawing.Size(85, 24);
+            this.btnNovo.TabIndex = 2;
+            this.btnNovo.Text = "Novo";
+            this.btnNovo.UseVisualStyleBackColor = true;
+            this.btnNovo.Click += new System.EventHandler(this.btnNovo_Click);
+            // 
+            // btnEditar
+            // 
+            this.btnEditar.Location = new System.Drawing.Point(165, 406);
+            this.btnEditar.Name = "btnEditar";
+            this.btnEditar.Size = new System.Drawing.Size(109, 24);
+            this.btnEditar.TabIndex = 2;
+            this.btnEditar.Text = "Editar Selecionado";
+            this.btnEditar.UseVisualStyleBackColor = true;
+            this.btnEditar.Click += new System.EventHandler(this.btnEditar_Click);
+            // 
+            // btnRemover
+            // 
+            this.btnRemover.Location = new System.Drawing.Point(338, 406);
+            this.btnRemover.Name = "btnRemover";
+            this.btnRemover.Size = new System.Drawing.Size(120, 24);
+            this.btnRemover.TabIndex = 2;
+            this.btnRemover.Text = "Remover Selecionado";
+            this.btnRemover.UseVisualStyleBackColor = true;
+            this.btnRemover.Click += new System.EventHandler(this.btnRemover_Click);
             // 
             // tbxBuscar
             // 
@@ -125,6 +155,16 @@
             this.pnlCadastro.Size = new System.Drawing.Size(328, 440);
             this.pnlCadastro.TabIndex = 0;
             // 
+            // btnSalvar
+            // 
+            this.btnSalvar.Location = new System.Drawing.Point(132, 406);
+            this.btnSalvar.Name = "btnSalvar";
+            this.btnSalvar.Size = new System.Drawing.Size(85, 24);
+            this.btnSalvar.TabIndex = 2;
+            this.btnSalvar.Text = "Salvar";
+            this.btnSalvar.UseVisualStyleBackColor = true;
+            this.btnSalvar.Click += new System.EventHandler(this.btnSalvar_Click);
+            // 
             // tbxQuantidade
             // 
             this.tbxQuantidade.Location = new System.Drawing.Point(105, 322);
@@ -138,6 +178,8 @@
             this.tbxPreco.Name = "tbxPreco";
             this.tbxPreco.Size = new System.Drawing.Size(213, 20);
             this.tbxPreco.TabIndex = 1;
+            this.tbxPreco.Enter += new System.EventHandler(this.tbxPreco_Enter);
+            this.tbxPreco.Leave += new System.EventHandler(this.tbxPreco_Leave);
             // 
             // tbxFornecedor
             // 
@@ -220,45 +262,6 @@
             this.lblCadastro.TabIndex = 0;
             this.lblCadastro.Text = "Cadastro";
             // 
-            // btnSalvar
-            // 
-            this.btnSalvar.Location = new System.Drawing.Point(132, 406);
-            this.btnSalvar.Name = "btnSalvar";
-            this.btnSalvar.Size = new System.Drawing.Size(85, 24);
-            this.btnSalvar.TabIndex = 2;
-            this.btnSalvar.Text = "Salvar";
-            this.btnSalvar.UseVisualStyleBackColor = true;
-            // 
-            // btnRemover
-            // 
-            this.btnRemover.Location = new System.Drawing.Point(338, 406);
-            this.btnRemover.Name = "btnRemover";
-            this.btnRemover.Size = new System.Drawing.Size(120, 24);
-            this.btnRemover.TabIndex = 2;
-            this.btnRemover.Text = "Remover Selecionado";
-            this.btnRemover.UseVisualStyleBackColor = true;
-            this.btnRemover.Click += new System.EventHandler(this.btnRemover_Click);
-            // 
-            // btnEditar
-            // 
-            this.btnEditar.Location = new System.Drawing.Point(165, 406);
-            this.btnEditar.Name = "btnEditar";
-            this.btnEditar.Size = new System.Drawing.Size(109, 24);
-            this.btnEditar.TabIndex = 2;
-            this.btnEditar.Text = "Editar Selecionado";
-            this.btnEditar.UseVisualStyleBackColor = true;
-            this.btnEditar.Click += new System.EventHandler(this.btnEditar_Click);
-            // 
-            // btnNovo
-            // 
-            this.btnNovo.Location = new System.Drawing.Point(9, 406);
-            this.btnNovo.Name = "btnNovo";
-            this.btnNovo.Size = new System.Drawing.Size(85, 24);
-            this.btnNovo.TabIndex = 2;
-            this.btnNovo.Text = "Novo";
-            this.btnNovo.UseVisualStyleBackColor = true;
-            this.btnNovo.Click += new System.EventHandler(this.btnNovo_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -269,6 +272,7 @@
             this.Controls.Add(this.pnlEstoque);
             this.Name = "MainForm";
             this.Text = "Gerenciamento de Estoque Unitri";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.pnlEstoque.ResumeLayout(false);
             this.pnlEstoque.PerformLayout();
             this.pnlCadastro.ResumeLayout(false);
