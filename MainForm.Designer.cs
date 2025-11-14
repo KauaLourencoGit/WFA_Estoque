@@ -138,12 +138,12 @@
             // pnlCadastro
             // 
             this.pnlCadastro.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.pnlCadastro.Controls.Add(this.btnSalvar);
-            this.pnlCadastro.Controls.Add(this.tbxQuantidade);
-            this.pnlCadastro.Controls.Add(this.tbxPreco);
-            this.pnlCadastro.Controls.Add(this.tbxFornecedor);
-            this.pnlCadastro.Controls.Add(this.tbxDescricao);
             this.pnlCadastro.Controls.Add(this.tbxCodigo);
+            this.pnlCadastro.Controls.Add(this.tbxDescricao);
+            this.pnlCadastro.Controls.Add(this.tbxFornecedor);
+            this.pnlCadastro.Controls.Add(this.tbxPreco);
+            this.pnlCadastro.Controls.Add(this.tbxQuantidade);
+            this.pnlCadastro.Controls.Add(this.btnSalvar);
             this.pnlCadastro.Controls.Add(this.lblQuantidade);
             this.pnlCadastro.Controls.Add(this.lblPreco);
             this.pnlCadastro.Controls.Add(this.lblFornecedor);
@@ -167,14 +167,14 @@
             // 
             // tbxQuantidade
             // 
-            this.tbxQuantidade.Location = new System.Drawing.Point(105, 322);
+            this.tbxQuantidade.Location = new System.Drawing.Point(105, 324);
             this.tbxQuantidade.Name = "tbxQuantidade";
             this.tbxQuantidade.Size = new System.Drawing.Size(213, 20);
             this.tbxQuantidade.TabIndex = 1;
             // 
             // tbxPreco
             // 
-            this.tbxPreco.Location = new System.Drawing.Point(105, 274);
+            this.tbxPreco.Location = new System.Drawing.Point(105, 275);
             this.tbxPreco.Name = "tbxPreco";
             this.tbxPreco.Size = new System.Drawing.Size(213, 20);
             this.tbxPreco.TabIndex = 1;
@@ -183,21 +183,21 @@
             // 
             // tbxFornecedor
             // 
-            this.tbxFornecedor.Location = new System.Drawing.Point(105, 224);
+            this.tbxFornecedor.Location = new System.Drawing.Point(105, 226);
             this.tbxFornecedor.Name = "tbxFornecedor";
             this.tbxFornecedor.Size = new System.Drawing.Size(213, 20);
             this.tbxFornecedor.TabIndex = 1;
             // 
             // tbxDescricao
             // 
-            this.tbxDescricao.Location = new System.Drawing.Point(105, 175);
+            this.tbxDescricao.Location = new System.Drawing.Point(105, 177);
             this.tbxDescricao.Name = "tbxDescricao";
             this.tbxDescricao.Size = new System.Drawing.Size(213, 20);
             this.tbxDescricao.TabIndex = 1;
             // 
             // tbxCodigo
             // 
-            this.tbxCodigo.Location = new System.Drawing.Point(105, 126);
+            this.tbxCodigo.Location = new System.Drawing.Point(105, 128);
             this.tbxCodigo.Name = "tbxCodigo";
             this.tbxCodigo.Size = new System.Drawing.Size(213, 20);
             this.tbxCodigo.TabIndex = 1;

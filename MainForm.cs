@@ -45,35 +45,23 @@ namespace WFA_Estoque
             EditarSelecionado();
         }
 
-        private void EditarSelecionado()
-        {
-            var p = ProdutoSelecionado();
-            if (p != null)
-            {
-                MessageBox.Show("Selecione um item para editar.", "Atenção", MessageBoxButtons.OK);
-                return;
-            }
-
-            tbxCodigo.Text = p.Codigo;
-            tbxDescricao.Text = p.Descricao;
-            tbxFornecedor.Text = p.Fornecedor;
-            tbxPreco.Text = p.Preco.ToString("0.##", new CultureInfo("pt-br"));
-            tbxQuantidade.Text = p.Quantidade.ToString();
-        }
         private void btnRemover_Click(object sender, EventArgs e)
         {
             try
-            {
+            { 
                 var p = ProdutoSelecionado();
-                if (p != null)
+                if (p == null)
                 {
-                    if (MessageBox.Show($"Remover o produto '{p.Descricao}' (codigo {p.Codigo})?",
-                        "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                    {
-                        estoque.RemoverProdutoPorCodigo(p.Codigo);
-                        AtualizarLista();
-                        SalvarCsv();
-                    }
+                    MessageBox.Show("Selecione um item para remover.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                if (MessageBox.Show($"Remover o produto '{p.Descricao}' (código {p.Codigo})?",
+                                    "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+
+                    estoque.RemoverProdutoPorCodigo(p.Codigo);
+                    AtualizarLista();
+                    SalvarCsv();
                 }
             }
             catch (KeyNotFoundException ex)
@@ -82,73 +70,12 @@ namespace WFA_Estoque
             }
             catch (InvalidOperationException ex)
             {
-                MessageBox.Show(ex.Message, "Atenção", MessageBoxButtons.OK);
+                MessageBox.Show(ex.Message, "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Não foi possivel remover o produto.\nDetalhes:");
+                MessageBox.Show($"Não foi possível remover o produto.\nDetalhes: {ex.Message}", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-        }
-
-        private void ConfigurarListView()
-        {
-            lvwEstoque.View = View.Details;
-            lvwEstoque.FullRowSelect = true;
-            lvwEstoque.GridLines = true;
-            lvwEstoque.MultiSelect = false;
-            lvwEstoque.HideSelection = false;
-
-            if (lvwEstoque.Columns.Count == 0)
-            {
-                lvwEstoque.Columns.Add("Código", 100, HorizontalAlignment.Left);
-                lvwEstoque.Columns.Add("Descrição", 220, HorizontalAlignment.Left);
-                lvwEstoque.Columns.Add("Fornecedor", 160, HorizontalAlignment.Left);
-                lvwEstoque.Columns.Add("Preço", 80, HorizontalAlignment.Right);
-                lvwEstoque.Columns.Add("Quantidade", 90, HorizontalAlignment.Right);
-            }
-
-        }
-
-        private void AtualizarLista()
-        {
-            var dados = estoque.BuscarProdutoPorDescricao(tbxBuscar.Text);
-
-            lvwEstoque.BeginUpdate();
-            lvwEstoque.Items.Clear();
-
-            for (int i = 0; i < dados.Count; i++)
-            {
-                var p = dados[i];
-                var item = new ListViewItem(p.Codigo);
-                item.SubItems.Add(p.Descricao);
-                item.SubItems.Add(p.Fornecedor);
-                item.SubItems.Add(p.Preco.ToString("0.##", new CultureInfo("pt-bt")));
-                item.SubItems.Add(p.Quantidade.ToString());
-
-                item.Tag = p;
-
-                lvwEstoque.Items.Add(item);
-
-            }
-
-            lvwEstoque.EndUpdate();
-
-            for (int i = 0; i < lvwEstoque.Columns.Count; i++)
-                lvwEstoque.Columns[i].Width = -2;
-
-
-
-
-        }
-
-        private Produto ProdutoSelecionado()
-        {
-            if (lvwEstoque.SelectedItems.Count == 0)
-                return null;
-
-            var item = lvwEstoque.SelectedItems[0];
-            string codigo = item.SubItems[0].Text.Trim();
-            return estoque.BuscarProdutoPorCodigo(codigo);
         }
 
         private void btnSalvar_Click(object sender, EventArgs e)
@@ -170,8 +97,7 @@ namespace WFA_Estoque
 
                     p.Codigo = codigoOriginal;
 
-                    estoque.AtualizarProduto(p);
-
+                    estoque.AtualizarProduto(p);    
                 }
 
                 AtualizarLista();
@@ -182,61 +108,23 @@ namespace WFA_Estoque
                 MessageBox.Show("Produto Salvo com sucesso.", "Sucesso", MessageBoxButtons.OK);
                 SalvarCsv();
             }
-            catch
+            catch (FormatException ex)
             {
-
+                MessageBox.Show(ex.Message, "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-
-        }
-
-        private Produto LerFormulario()
-        {
-            string codigo = tbxCodigo.Text.Trim();
-            string descricao = tbxDescricao.Text.Trim();
-            string fornecedor = tbxFornecedor.Text.Trim();
-
-            if (string.IsNullOrWhiteSpace(codigo))
-                throw new ArgumentException("O Código não pode estar vazio.");
-            if (string.IsNullOrWhiteSpace(descricao))
-                throw new ArgumentException("A Descrição não pode estar vazia.");
-
-            string textoPreco = tbxPreco.Text.Replace("R$", "").Trim();
-
-            if (!float.TryParse(textoPreco, NumberStyles.Float, new CultureInfo("pt-br"), out float preco))
-                throw new FormatException("Preço ivalido. Use vírgula como separador decimal (ex.: 10,50).");
-            if (!int.TryParse(tbxQuantidade.Text.Trim(), out int quantidade))
-                throw new FormatException("Quantidade inválida, use números inteiros.");
-
-            return new Produto(codigo, descricao, fornecedor, preco, quantidade);
-        }
-
-        public void SalvarCsv()
-        {
-            try
+            catch (ArgumentException ex)
             {
-                using (var sw = new StreamWriter(caminhoCsv, false))
-                {
-                    foreach (var p in estoque.Itens)
-                    {
-                        string linha = $"{p.Codigo.Replace(";", " ")}´;{p.Descricao.Replace(";", " ")}";
-                        sw.WriteLine(linha);
-                    }
-
-                }
-                MessageBox.Show("Produtos salvos em produtos.csv", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(ex.Message, "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            catch (UnauthorizedAccessException)
+            catch (InvalidOperationException ex)
             {
-                MessageBox.Show("Não tem permissão para salvar o arquivo.", "Permissão negada.", MessageBoxButtons.OK);
-            }
-            catch (IOException)
-            {
-                MessageBox.Show("Não foi possivel salvar, inacessível ou em uso.", "Arquivo em uso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(ex.Message, "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao salvar CSV.\nDetalhes: {ex.Message}", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show($"Não foi possível salvar o produto.\nDetalhes: {ex.Message}", "Alerta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -257,6 +145,34 @@ namespace WFA_Estoque
             tbxPreco.Text = tbxPreco.Text.Replace("R$", "").Trim();
         }
 
+        public void SalvarCsv()
+        {
+            try
+            {
+                using (var sw = new StreamWriter(caminhoCsv, false))
+                {
+                    foreach (var p in estoque.Itens)
+                    {
+                        string linha = $"{p.Codigo.Replace(";", " ")};{p.Descricao.Replace(";", " ")};{p.Fornecedor.Replace(";", " ")};{p.Preco.ToString("0.##", new CultureInfo("pt-BR"))};{p.Quantidade}";
+                        sw.WriteLine(linha);
+                    }
+
+                }
+                MessageBox.Show("Produtos salvos em produtos.csv", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                MessageBox.Show("Não tem permissão para salvar o arquivo.", "Permissão negada.", MessageBoxButtons.OK);
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("Não foi possivel salvar, inacessível ou em uso.", "Arquivo em uso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao salvar CSV.\nDetalhes: {ex.Message}", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
         public void CarregarCsv()
         {
             try
@@ -312,7 +228,7 @@ namespace WFA_Estoque
                 else
                     MessageBox.Show("Arquivo carregado com sucesso!", "Sucesso", MessageBoxButtons.OK);
             }
-            catch (IOException ex)
+            catch (IOException)
             {
                 MessageBox.Show("Arquivo em uso ou inacessível.", "Arquivo em uso.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
@@ -322,10 +238,116 @@ namespace WFA_Estoque
             }
         }
 
+        private void EditarSelecionado()
+        {
+            var p = ProdutoSelecionado();
+            if (p == null)
+            {
+                MessageBox.Show("Selecione um item para editar.", "Item não selecionado", MessageBoxButtons.OK);
+                return;
+            }
+
+            tbxCodigo.Text = p.Codigo;
+            tbxDescricao.Text = p.Descricao;
+            tbxFornecedor.Text = p.Fornecedor;
+            tbxPreco.Text = p.Preco.ToString("0.##", new CultureInfo("pt-br"));
+            tbxQuantidade.Text = p.Quantidade.ToString();
+
+            tbxCodigo.ReadOnly = true;
+            tbxCodigo.Focus();
+            tbxCodigo.SelectAll();
+        }
         private void LimparFormulario()
         {
+            tbxCodigo.Clear();
+            tbxDescricao.Clear();
+            tbxFornecedor.Clear();
+            tbxPreco.Clear();
+            tbxQuantidade.Clear();
+
+            tbxCodigo.Focus();
+        }
+
+        private Produto ProdutoSelecionado()
+        {
+            if (lvwEstoque.SelectedItems.Count == 0)
+                return null;
+
+            var item = lvwEstoque.SelectedItems[0];
+            string codigo = item.SubItems[0].Text.Trim();
+            return estoque.BuscarProdutoPorCodigo(codigo);
+        }
+
+        private void AtualizarLista()
+        {
+            var dados = estoque.BuscarProdutoPorDescricao(tbxBuscar.Text);
+
+            lvwEstoque.BeginUpdate();
+            lvwEstoque.Items.Clear();
+
+            for (int i = 0; i < dados.Count; i++)
+            {
+                var p = dados[i];
+                var item = new ListViewItem(p.Codigo);
+                item.SubItems.Add(p.Descricao);
+                item.SubItems.Add(p.Fornecedor);
+                item.SubItems.Add(p.Preco.ToString("0.##", new CultureInfo("pt-bt")));
+                item.SubItems.Add(p.Quantidade.ToString());
+
+                item.Tag = p;
+
+                lvwEstoque.Items.Add(item);
+
+            }
+
+            lvwEstoque.EndUpdate();
+
+            for (int i = 0; i < lvwEstoque.Columns.Count; i++)
+                lvwEstoque.Columns[i].Width = -2;
+        }
+
+        private void ConfigurarListView()
+        {
+            lvwEstoque.View = View.Details;
+            lvwEstoque.FullRowSelect = true;
+            lvwEstoque.GridLines = true;
+            lvwEstoque.MultiSelect = false;
+            lvwEstoque.HideSelection = false;
+
+            if (lvwEstoque.Columns.Count == 0)
+            {
+                lvwEstoque.Columns.Add("Código", 100, HorizontalAlignment.Left);
+                lvwEstoque.Columns.Add("Descrição", 220, HorizontalAlignment.Left);
+                lvwEstoque.Columns.Add("Fornecedor", 160, HorizontalAlignment.Left);
+                lvwEstoque.Columns.Add("Preço", 80, HorizontalAlignment.Right);
+                lvwEstoque.Columns.Add("Quantidade", 90, HorizontalAlignment.Right);
+            }
 
         }
+
+        private Produto LerFormulario()
+        {
+            string codigo = tbxCodigo.Text.Trim();
+            string descricao = tbxDescricao.Text.Trim();
+            string fornecedor = tbxFornecedor.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(codigo))
+                throw new ArgumentException("O Código não pode estar vazio.");
+            if (string.IsNullOrWhiteSpace(descricao))
+                throw new ArgumentException("A Descrição não pode estar vazia.");
+
+            string textoPreco = tbxPreco.Text.Replace("R$", "").Trim();
+
+            if (!float.TryParse(textoPreco, NumberStyles.Float, new CultureInfo("pt-br"), out float preco))
+                throw new FormatException("Preço ivalido. Use vírgula como separador decimal (ex.: 10,50).");
+            if (!int.TryParse(tbxQuantidade.Text.Trim(), out int quantidade))
+                throw new FormatException("Quantidade inválida, use números inteiros.");
+
+            return new Produto(codigo, descricao, fornecedor, preco, quantidade);
+        }
+
+
+
     }       
 
 }
